@@ -1,0 +1,32 @@
+Audio Generation Instructions
+
+1. Default Narration File
+To create the default audio narration file, use a text-to-speech service to generate an MP3 from this text:
+"Welcome to India's heritage site audio guide. This narration provides information about the historical and cultural significance of this site. Listen as we explore the architectural features, historical context, and interesting facts about this magnificent monument."
+
+Save this file as "default_narration.mp3" in this directory.
+
+2. Category-specific Audio Files
+Generate the following category-specific audio files:
+
+- temple_narration.mp3:
+"This ancient temple represents one of India's most remarkable architectural achievements. Built using traditional techniques, it showcases intricate stone carvings depicting scenes from ancient scriptures. The temple's design follows sacred geometry principles, with its spire aligned to catch the first rays of the rising sun. The main sanctum houses exquisite sculptures, while the mandapa features detailed pillars with musical motifs."
+
+- fort_narration.mp3:
+"This majestic fort stands as a testament to India's military engineering prowess. Its massive walls and strategic location made it an impregnable stronghold. The fort features multiple layers of defense, including moats, bastions, and hidden escape routes. The architecture combines defensive elements with beautiful palaces and temples within."
+
+- palace_narration.mp3:
+"This magnificent palace stands as a testament to royal grandeur and architectural excellence. Its halls and courtyards tell stories of royal ceremonies and diplomatic meetings. The palace showcases a unique blend of Indian and Persian architectural styles, with stunning mirror work, intricate paintings, and beautiful gardens."
+
+- monument_narration.mp3:
+"This historic monument represents a perfect blend of various architectural styles. Built using advanced engineering techniques of its time, it demonstrates perfect symmetry and proportion. The structure incorporates local materials and traditional craftsmanship, creating a harmonious blend of form and function."
+
+3. Site-specific Audio Files
+For specific important sites, consider creating custom narrations with more detailed information about that particular site. Name these files "narration_[siteId].mp3".
+
+You can generate these audio files using:
+- Text-to-speech services like Google Cloud TTS, Amazon Polly, or Microsoft Azure Speech Service
+- Free online TTS tools
+- Recording professional voice-over narrations
+
+For testing purposes, even creating a single default_narration.mp3 file will enable the audio functionality to work properly. 
