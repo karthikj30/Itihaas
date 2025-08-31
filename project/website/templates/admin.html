@@ -1,0 +1,1029 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+        --primary-color: #f1683a;
+        --primary-light: rgba(241, 104, 58, 0.1);
+        --bg-dark: #1a1c23;
+        --card-dark: #2a2d35;
+        --text-primary: #e4e6eb;
+        --text-secondary: #b0b3b8;
+        --border-color: #3a3f48;
+        --hover-color: #3a3f48;
+        --success-color: #4CAF50;
+        --warning-color: #ffd700;
+        --danger-color: #f44336;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+    }
+
+    .admin-container {
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .admin-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #e85d2f 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(241, 104, 58, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .admin-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+        z-index: 1;
+    }
+
+    .admin-header > div {
+        position: relative;
+        z-index: 2;
+    }
+
+    .admin-header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .admin-header p {
+        margin: 5px 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+    }
+
+    .header-actions .btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        font-weight: 500;
+    }
+
+    .header-actions .btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: var(--card-dark);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), #e85d2f);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-color);
+        box-shadow: 0 8px 25px rgba(241, 104, 58, 0.2);
+    }
+
+    .stat-card h3 {
+        color: var(--text-secondary);
+        margin-bottom: 15px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .stat-card p {
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .stat-card .trend {
+        font-size: 14px;
+        color: #4caf50;
+        margin-top: 10px;
+    }
+
+    .stat-card .trend.negative {
+        color: #f44336;
+    }
+
+    .admin-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .chart-container {
+        background: var(--card-dark);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 1px solid var(--border-color);
+        margin-bottom: 30px;
+    }
+
+    .chart-container h3 {
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .recent-activity {
+        background: var(--card-dark);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 1px solid var(--border-color);
+    }
+
+    .recent-activity h3 {
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .activity-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-item:hover {
+        background: var(--hover-color);
+        border-radius: 8px;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--primary-light);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-icon {
+        transform: scale(1.1);
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-content h4 {
+        color: var(--text-primary);
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .activity-content p {
+        color: var(--text-secondary);
+        margin: 5px 0 0;
+        font-size: 12px;
+    }
+
+    .admin-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .action-card {
+        background: var(--card-dark);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--primary-color), #e85d2f);
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .action-card h3 {
+        margin-left: 15px;
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .action-card h3 i {
+        color: #f1683a;
+    }
+
+    .action-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .action-card li {
+        margin-bottom: 15px;
+    }
+
+    .action-card a {
+        margin-left: 15px;
+        position: relative;
+        color: var(--text-secondary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 12px 15px;
+        border-radius: 8px;
+    }
+
+    .action-card a::before {
+        content: '';
+        position: absolute;
+        left: -15px;
+        top: 50%;
+        width: 6px;
+        height: 6px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .action-card a:hover::before {
+        opacity: 1;
+    }
+
+    .action-card a:hover {
+        background: var(--hover-color);
+        color: var(--primary-color);
+        transform: translateX(5px);
+    }
+
+    .action-card a i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .quick-stat {
+        background: var(--hover-color);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
+
+    .quick-stat:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+        border-color: var(--primary-color);
+    }
+
+    .quick-stat h4 {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .quick-stat p {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 10px 0 0;
+        background: linear-gradient(45deg, var(--primary-color), #e85d2f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Custom Chart Styles */
+    #revenueChart {
+        background: var(--card-dark);
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: var(--card-dark);
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        width: 80%;
+        max-width: 1000px;
+        border-radius: 8px;
+        color: var(--text-primary);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .close {
+        color: var(--text-secondary);
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: var(--text-primary);
+    }
+
+    .user-list-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+
+    #userTable, #bookingTable {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+
+    #userTable th, #bookingTable th {
+        background: var(--bg-dark);
+        padding: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    #userTable td, #bookingTable td {
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+
+    #userTable tr:hover td, #bookingTable tr:hover td {
+        background: var(--hover-color);
+    }
+
+    .action-btn {
+        padding: 8px 16px;
+        margin: 0 4px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .verify-btn, .approve-btn {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: var(--success-color);
+    }
+
+    .verify-btn:hover, .approve-btn:hover {
+        background-color: var(--success-color);
+        color: white;
+    }
+
+    .delete-btn {
+        background-color: rgba(244, 67, 54, 0.2);
+        color: var(--danger-color);
+    }
+
+    .delete-btn:hover {
+        background-color: var(--danger-color);
+        color: white;
+    }
+
+    .action-btn:disabled {
+        background-color: var(--border-color);
+        cursor: not-allowed;
+        color: var(--text-secondary);
+    }
+
+    h2 {
+        color: var(--text-primary);
+        margin-bottom: 20px;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status-badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .status-badge.pending {
+        background-color: rgba(255, 215, 0, 0.2);
+        color: var(--warning-color);
+    }
+
+    .status-badge.approved {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: var(--success-color);
+    }
+
+    .status-badge.cancelled {
+        background-color: rgba(244, 67, 54, 0.2);
+        color: var(--danger-color);
+    }
+
+    .booking-list-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+
+    @media (max-width: 768px) {
+        .admin-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-stats {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .admin-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-container">
+    <div class="admin-header">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Welcome back, {{ current_user.first_name }}</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-light" onclick="refreshData()">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+    </div>
+
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+            <div class="trend">
+                <i class="fas fa-arrow-up"></i> 12% from last month
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>Total Bookings</h3>
+            <p>{{ total_bookings }}</p>
+            <div class="trend">
+                <i class="fas fa-arrow-up"></i> 8% from last month
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>Total Revenue</h3>
+            <p>₹{{ total_revenue }}</p>
+            <div class="trend">
+                <i class="fas fa-arrow-up"></i> 15% from last month
+            </div>
+        </div>
+        <div class="stat-card">
+            <h3>Active Guides</h3>
+            <p>{{ active_guides }}</p>
+            <div class="trend">
+                <i class="fas fa-arrow-up"></i> 5% from last month
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+        <div class="chart-container">
+            <h3>Revenue Analytics</h3>
+            <canvas id="revenueChart"></canvas>
+        </div>
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New Booking</h4>
+                        <p>Taj Mahal - 2 visitors</p>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New User Registration</h4>
+                        <p>John Doe</p>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New Review</h4>
+                        <p>Qutub Minar - 5 stars</p>
+                    </div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New Guide Registration</h4>
+                        <p>Sarah Smith</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="admin-actions">
+        <div class="action-card">
+            <h3><i class="fas fa-users"></i> User Management</h3>
+            <ul>
+                <li><a href="#" id="viewAllUsers"><i class="fas fa-list"></i> View All Users</a></li>
+                <li><a href="#"><i class="fas fa-user-plus"></i> Add New User</a></li>
+                <li><a href="#"><i class="fas fa-user-edit"></i> Edit User Details</a></li>
+                <li><a href="#"><i class="fas fa-user-lock"></i> Manage Permissions</a></li>
+                <li><a href="#"><i class="fas fa-user-check"></i> Verify Users</a></li>
+            </ul>
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <h4>Verified Users</h4>
+                    <p id="verifiedUsersCount">{{ verified_users }}</p>
+                </div>
+                <div class="quick-stat">
+                    <h4>Pending Verification</h4>
+                    <p id="pendingVerificationsCount">{{ pending_verifications }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="action-card">
+            <h3><i class="fas fa-calendar-alt"></i> Booking Management</h3>
+            <ul>
+                <li><a href="#" id="viewAllBookings"><i class="fas fa-list"></i> View All Bookings</a></li>
+                <li><a href="#"><i class="fas fa-calendar-plus"></i> Create Booking</a></li>
+                <li><a href="#"><i class="fas fa-calendar-check"></i> Manage Schedule</a></li>
+                <li><a href="#"><i class="fas fa-calendar-times"></i> Cancel Bookings</a></li>
+                <li><a href="#"><i class="fas fa-file-invoice"></i> Generate Reports</a></li>
+            </ul>
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <h4>Today's Bookings</h4>
+                    <p id="todayBookingsCount">{{ today_bookings }}</p>
+                </div>
+                <div class="quick-stat">
+                    <h4>Pending Approvals</h4>
+                    <p id="pendingApprovalsCount">{{ pending_approvals }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="action-card">
+            <h3><i class="fas fa-cog"></i> Content Management</h3>
+            <ul>
+                <li><a href="#"><i class="fas fa-newspaper"></i> Manage News</a></li>
+                <li><a href="#"><i class="fas fa-video"></i> Manage Vlogs</a></li>
+                <li><a href="#"><i class="fas fa-star"></i> Manage Reviews</a></li>
+                <li><a href="#"><i class="fas fa-images"></i> Manage Gallery</a></li>
+                <li><a href="#"><i class="fas fa-bullhorn"></i> Manage Announcements</a></li>
+            </ul>
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <h4>Total Reviews</h4>
+                    <p>{{ total_reviews }}</p>
+                </div>
+                <div class="quick-stat">
+                    <h4>Active Vlogs</h4>
+                    <p>{{ active_vlogs }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Management Modal -->
+<div id="userManagementModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>User Management</h2>
+        <div class="user-list-container">
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Role</th>
+                        <th>Coins</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Management Modal -->
+<div id="bookingManagementModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Booking Management</h2>
+        <div class="booking-list-container">
+            <table id="bookingTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Monument</th>
+                        <th>Date</th>
+                        <th>Visitors</th>
+                        <th>Amount</th>
+                        <th>Guide</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingTableBody">
+                    <!-- Booking data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Enhanced Chart Configuration
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Revenue',
+                data: [12000, 19000, 15000, 25000, 22000, 30000],
+                borderColor: '#f1683a',
+                backgroundColor: 'rgba(241, 104, 58, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#2a2d35',
+                    titleColor: '#e4e6eb',
+                    bodyColor: '#b0b3b8',
+                    borderColor: '#3a3f48',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#b0b3b8'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#b0b3b8'
+                    }
+                }
+            }
+        }
+    });
+
+    // Enhanced Refresh Data Function
+    function refreshData() {
+        const btn = document.querySelector('.header-actions .btn');
+        btn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
+
+    // Add click handlers for stat cards
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const title = this.querySelector('h3').textContent;
+            const value = this.querySelector('p').textContent;
+            showDetailModal(title, value);
+        });
+    });
+
+    // Add click handlers for activity items
+    document.querySelectorAll('.activity-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const title = this.querySelector('h4').textContent;
+            const details = this.querySelector('p').textContent;
+            showActivityModal(title, details);
+        });
+    });
+
+    // Modal functions
+    function showDetailModal(title, value) {
+        // Implement modal functionality here
+        alert(`${title}\nValue: ${value}`);
+    }
+
+    function showActivityModal(title, details) {
+        // Implement modal functionality here
+        alert(`${title}\nDetails: ${details}`);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewAllUsersBtn = document.getElementById('viewAllUsers');
+        const userManagementModal = document.getElementById('userManagementModal');
+        const closeBtn = document.querySelector('.close');
+        const userTableBody = document.getElementById('userTableBody');
+        const verifiedUsersCount = document.getElementById('verifiedUsersCount');
+        const pendingVerificationsCount = document.getElementById('pendingVerificationsCount');
+
+        // Function to fetch and display user data
+        async function fetchUserData() {
+            try {
+                const response = await fetch('/admin/users');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                
+                // Update quick stats
+                verifiedUsersCount.textContent = data.verified_users;
+                pendingVerificationsCount.textContent = data.pending_verifications;
+                
+                // Clear existing table data
+                userTableBody.innerHTML = '';
+                
+                // Populate user table
+                data.users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.first_name || 'N/A'}</td>
+                        <td>${user.email}</td>
+                        <td>${user.is_verified ? 'Verified' : 'Pending'}</td>
+                        <td>${user.is_guide ? 'Guide' : 'User'}</td>
+                        <td>${user.itihaas_coins}</td>
+                        <td>
+                            <button class="action-btn verify-btn" data-user-id="${user.id}" ${user.is_verified ? 'disabled' : ''}>
+                                Verify
+                            </button>
+                            <button class="action-btn delete-btn" data-user-id="${user.id}">
+                                Delete
+                            </button>
+                        </td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+                
+                // Show the modal
+                userManagementModal.style.display = 'block';
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                alert('Error fetching user data. Please try again.');
+            }
+        }
+
+        // Event listeners
+        if (viewAllUsersBtn) {
+            viewAllUsersBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetchUserData();
+            });
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                userManagementModal.style.display = 'none';
+            });
+        }
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === userManagementModal) {
+                userManagementModal.style.display = 'none';
+            }
+        });
+
+        // Booking Management
+        const viewAllBookingsBtn = document.getElementById('viewAllBookings');
+        const bookingManagementModal = document.getElementById('bookingManagementModal');
+        const bookingCloseBtn = bookingManagementModal.querySelector('.close');
+        const bookingTableBody = document.getElementById('bookingTableBody');
+        const todayBookingsCount = document.getElementById('todayBookingsCount');
+        const pendingApprovalsCount = document.getElementById('pendingApprovalsCount');
+
+        // Function to fetch and display booking data
+        async function fetchBookingData() {
+            try {
+                const response = await fetch('/admin/bookings');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                
+                // Update quick stats
+                todayBookingsCount.textContent = data.today_bookings;
+                pendingApprovalsCount.textContent = data.pending_approvals;
+                
+                // Clear existing table data
+                bookingTableBody.innerHTML = '';
+                
+                // Populate booking table
+                data.bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${booking.id}</td>
+                        <td>${booking.user_name}</td>
+                        <td>${booking.monument_name}</td>
+                        <td>${booking.booking_date}</td>
+                        <td>${booking.visitors}</td>
+                        <td>₹${booking.total_amount}</td>
+                        <td>${booking.guide_name}</td>
+                        <td>
+                            <span class="status-badge ${booking.status.toLowerCase()}">
+                                ${booking.status}
+                            </span>
+                        </td>
+                        <td>
+                            ${booking.status === 'Pending' ? 
+                                `<button class="action-btn approve-btn" data-booking-id="${booking.id}">
+                                    Approve
+                                </button>` : ''
+                            }
+                            <button class="action-btn delete-btn" data-booking-id="${booking.id}">
+                                Cancel
+                            </button>
+                        </td>
+                    `;
+                    bookingTableBody.appendChild(row);
+                });
+                
+                // Show the modal
+                bookingManagementModal.style.display = 'block';
+            } catch (error) {
+                console.error('Error fetching booking data:', error);
+                alert('Error fetching booking data. Please try again.');
+            }
+        }
+
+        // Event listeners for booking management
+        if (viewAllBookingsBtn) {
+            viewAllBookingsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                fetchBookingData();
+            });
+        }
+        
+        if (bookingCloseBtn) {
+            bookingCloseBtn.addEventListener('click', function() {
+                bookingManagementModal.style.display = 'none';
+            });
+        }
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === bookingManagementModal) {
+                bookingManagementModal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %} 
