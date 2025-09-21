@@ -2,7 +2,6 @@ import os
 from datetime import datetime, timedelta
 import re
 import time
-import pywhatkit
 
 def format_phone_number(phone_number):
     """
@@ -23,6 +22,18 @@ def send_booking_confirmation(phone_number, booking_details):
     Send booking confirmation via WhatsApp using pywhatkit
     """
     try:
+        # In headless/container environments there may be no X DISPLAY available.
+        # pywhatkit (via pyautogui/mouseinfo) expects a display and will raise
+        # if the DISPLAY environment variable is missing. Detect that and
+        # skip sending instead of importing pywhatkit at module import time.
+        if 'DISPLAY' not in os.environ:
+            msg = "No DISPLAY available; skipping WhatsApp send in headless environment."
+            print(msg)
+            return False, msg
+
+        # Import here so importing this module doesn't require a GUI/display.
+        import pywhatkit
+
         # Format phone number
         formatted_number = format_phone_number(phone_number)
         
