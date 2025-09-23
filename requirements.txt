@@ -11,5 +11,5 @@ requests==2.31.0
 pywhatkit==5.4
 flask-migrate==4.0.4
 flask-mail==0.9.1
-schedule==1.2.13
+schedule==1.2.2
 gunicorn==21.2.0
