@@ -1,12 +1,18 @@
 # Itihaas - Indian Heritage Tourism Platform
 
-![Itihaas Logo](project/website/static/logo.png)
+<img width="1906" height="904" alt="image" src="https://github.com/user-attachments/assets/b9fca499-3e66-474a-95b0-4d3f66e0a21f" />
+
 
 ## 🌟 Overview
+
+<img width="1913" height="906" alt="image" src="https://github.com/user-attachments/assets/316ad378-6ee1-4e89-abbe-a71b6f9a3aba" />
 
 Itihaas is a comprehensive Indian heritage tourism platform that connects travelers with India's rich cultural heritage, monuments, and historical sites. The platform offers guided tours, merchandise, interactive maps, and a unique reward system to enhance the tourism experience.
 
 ## 🏛️ Features
+
+<img width="1901" height="902" alt="image" src="https://github.com/user-attachments/assets/a7584458-de85-4d16-9dbf-065908ebe774" />
+<img width="1907" height="910" alt="image" src="https://github.com/user-attachments/assets/25504c26-f8b3-44e5-93b3-3a4ef48b2951" />
 
 ### Core Features
 - **Interactive Heritage Map**: Explore UNESCO World Heritage sites and monuments across India
