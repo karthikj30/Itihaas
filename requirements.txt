@@ -13,3 +13,4 @@ flask-migrate
 flask-mail
 schedule
 gunicorn
+spacy
