@@ -18,7 +18,7 @@ os.environ['EMAIL_USER'] = os.environ.get('EMAIL_USER', 'itihaasdairy@gmail.com'
 os.environ['EMAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD', 'opuo ywpj izjy qnxf')  
 
 # Google Maps API key
-GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', "AIzaSyBygM66vagm5UY7vMN_mHOiUdNNZmidvZQ")
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', "AIzaSyCBFCQNAcC3nh20qA_eX-NYqwMVoKPTvm0")
 os.environ['GOOGLE_MAPS_API_KEY'] = GOOGLE_MAPS_API_KEY
 
 # Gnews API configuration

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 from datetime import datetime
-from .models import Booking, Guide, ItihaasCoins, TourPackage, Review, User, Transaction
+from .models import Booking, Guide, Monastery360Coins, TourPackage, Review, User, Transaction
 from .merchandise_models import Merchandise
 from . import db
 import random

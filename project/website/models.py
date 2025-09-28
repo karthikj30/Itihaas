@@ -24,7 +24,7 @@ class User(db.Model, UserMixin):
     notes = db.relationship('Note')
     bookings = db.relationship('Booking', backref='user', lazy=True)
     guide_info = db.relationship('Guide', backref='user', uselist=False)
-    itihaas_coins = db.relationship('ItihaasCoins', backref='user', uselist=False)
+    monastery360_coins = db.relationship('Monastery360Coins', backref='user', uselist=False)
 
     def generate_verification_code(self):
         import random
@@ -167,7 +167,7 @@ class Guide(db.Model):
             'description': self.description
         }
 
-class ItihaasCoins(db.Model):
+class Monastery360Coins(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     coins = db.Column(db.Integer, default=0)

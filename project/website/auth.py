@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, render_template, request, flash, redirect, url_for, session, jsonify
-from .models import User, Guide, ItihaasCoins, Transaction
+from .models import User, Guide, Monastery360Coins, Transaction
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -220,16 +220,16 @@ def update_coins():
         used_coins = data.get('used_coins', 0)
         transaction_id = data.get('transaction_id')
 
-        # Get or create ItihaasCoins record for the user
-        itihaas_coins = ItihaasCoins.query.filter_by(user_id=current_user.id).first()
-        if not itihaas_coins:
-            itihaas_coins = ItihaasCoins(user_id=current_user.id, coins=0)
-            db.session.add(itihaas_coins)
+        # Get or create Monastery360Coins record for the user
+        monastery360_coins = Monastery360Coins.query.filter_by(user_id=current_user.id).first()
+        if not monastery360_coins:
+            monastery360_coins = Monastery360Coins(user_id=current_user.id, coins=0)
+            db.session.add(monastery360_coins)
 
         # Update coins balance
-        current_balance = itihaas_coins.coins
+        current_balance = monastery360_coins.coins
         new_balance = current_balance + reward_coins - used_coins
-        itihaas_coins.coins = new_balance
+        monastery360_coins.coins = new_balance
 
         # Create transaction record
         transaction = Transaction(

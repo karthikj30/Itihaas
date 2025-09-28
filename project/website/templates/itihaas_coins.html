@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Itihaas Coins{% endblock %}
+{% block title %}Monastery360 Coins{% endblock %}
 
 {% block content %}
 <style>
@@ -85,7 +85,7 @@
 
 <div class="coins-container">
     <div class="coins-header">
-        <h1>Itihaas Coins</h1>
+    <h1>Monastery360 Coins</h1>
         <p>Your rewards for exploring heritage sites</p>
     </div>
 
@@ -94,15 +94,15 @@
             <i class="fas fa-coins"></i>
         </div>
         <div class="balance-title">Your Balance</div>
-        <div class="balance-amount">{{ current_user.itihaas_coins.coins if current_user.itihaas_coins else 0 }}</div>
-        <div class="balance-subtitle">Itihaas Coins</div>
+    <div class="balance-amount">{{ current_user.monastery360_coins.coins if current_user.monastery360_coins else 0 }}</div>
+    <div class="balance-subtitle">Monastery360 Coins</div>
     </div>
 
     <div class="reward-info">
         <h3>How to Earn Coins</h3>
-        <p>Earn Itihaas Coins automatically when you book heritage experiences:</p>
+    <p>Earn Monastery360 Coins automatically when you book heritage experiences:</p>
         <ul>
-            <li>Get 10% of your booking amount as Itihaas Coins</li>
+            <li>Get 10% of your booking amount as Monastery360 Coins</li>
             <li>Coins are credited immediately after successful booking</li>
             <li>Use your coins for future bookings or redeem them for special rewards</li>
         </ul>
